@@ -1,1 +1,26 @@
 @import "tailwindcss";
+
+@theme inline {
+  --color-background: var(--background);
+  --color-border: var(--border);
+  --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+}
+
+:root {
+  --background: oklch(1 0 0);
+  --border: oklch(0.922 0 0);
+  --primary: oklch(0.7 0.19 48);
+  --secondary: oklch(0.97 0 0);
+}
+
+@layer base {
+  body {
+    @apply bg-background;
+  }
+
+  ::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
+}

@@ -2,9 +2,10 @@ import {useEffect} from "react";
 import {Outlet} from "react-router-dom";
 
 import {useProductStore} from "@/store/useProductStore";
+import {Header} from "@/components/ui/Header";
 
 export function MainLayout() {
-  const loadProducts = useProductStore((state) => state.loadProducts);
+  const {loadProducts} = useProductStore();
 
   useEffect(() => {
     loadProducts();
@@ -12,6 +13,7 @@ export function MainLayout() {
 
   return (
     <div>
+      <Header />
       <Outlet />
     </div>
   );
