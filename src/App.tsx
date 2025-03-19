@@ -1,18 +1,15 @@
-import {useEffect} from "react";
+import {Route, Routes} from "react-router-dom";
 
-import {useProductStore} from "@/store/useProductStore";
+import {MainLayout} from "@/layouts/MainLayout";
+import {HomePage} from "@/pages/Home";
 
 function App() {
-  const loadProducts = useProductStore((state) => state.loadProducts);
-
-  useEffect(() => {
-    loadProducts();
-  }, [loadProducts]);
-
   return (
-    <div className="flex items-center justify-center min-h-screen">
-      <h1>Hola mundo</h1>
-    </div>
+    <Routes>
+      <Route element={<MainLayout />}>
+        <Route index element={<HomePage />} />
+      </Route>
+    </Routes>
   );
 }
 
