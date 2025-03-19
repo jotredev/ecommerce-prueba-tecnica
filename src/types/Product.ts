@@ -6,3 +6,9 @@ export type Product = {
   price: number;
   tax: number;
 };
+
+export interface ProductState {
+  products: Product[];
+  loadProducts: () => void;
+  decreaseStock: (productId: number, quantity: number) => void;
+}

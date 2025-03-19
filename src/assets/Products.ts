@@ -1,6 +1,6 @@
 import {Product} from "@/types/Product";
 
-export const mockData: Product[] = [
+export const initProductsMock: Product[] = [
   {
     id: 1,
     name: "Manzana Roja",
