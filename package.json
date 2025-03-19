@@ -1,13 +1,25 @@
 {
   "name": "ecommerce-prueba-tecnica",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "type": "module",
   "scripts": {
     "dev": "eslint . && vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jotredev/ecommerce-prueba-tecnica.git"
+  },
+  "keywords": [],
+  "author": {
+    "name": "Jorge Trejo",
+    "email": "jorgeetrejoo@gmail.com"
+  },
+  "imports": {
+    "#components/*": "./components/*"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.0.14",
@@ -17,6 +29,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",
+    "@types/node": "^22.13.10",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
     "@vitejs/plugin-react-swc": "^3.8.0",
