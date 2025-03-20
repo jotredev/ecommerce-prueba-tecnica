@@ -6,9 +6,56 @@ import {useProductStore} from "@/store/useProductStore";
 import {useInvoiceStore} from "@/store/useInvoiceStore";
 import {CustomerInfo} from "@/types/Invoice";
 
+/**
+ * Función de acceso al estado global de productos.
+ * Permite acceder al store de productos desde dentro del store de carrito
+ * sin crear dependencias circulares.
+ *
+ * @returns {ReturnType<typeof useProductStore.getState>} Estado actual del store de productos
+ */
 const productStore = () => useProductStore.getState();
+
+/**
+ * Función de acceso al estado global de facturas.
+ * Permite acceder al store de facturas desde dentro del store de carrito
+ * para la creación de facturas durante el checkout.
+ *
+ * @returns {ReturnType<typeof useInvoiceStore.getState>} Estado actual del store de facturas
+ */
 const invoiceStore = () => useInvoiceStore.getState();
 
+/**
+ * Store global para la gestión del carrito de compras.
+ *
+ * Este store implementa toda la lógica relacionada con el carrito de compras:
+ * - Agregar productos al carrito
+ * - Actualizar cantidades de productos
+ * - Eliminar productos
+ * - Calcular subtotales, impuestos y totales
+ * - Proceso de checkout y generación de facturas
+ *
+ * Características clave:
+ * - Sincronización automática con el inventario (store de productos)
+ * - Persistencia en localStorage para mantener el carrito entre sesiones
+ * - Gestión de disponibilidad de stock al agregar o actualizar productos
+ * - Integración con el sistema de facturación
+ *
+ * @example
+ * // Obtener información del carrito y agregar un producto
+ * function ProductCard({ product }) {
+ *   const { addToCart, getTotalItems } = useCartStore();
+ *
+ *   return (
+ *     <div>
+ *       <h3>{product.name}</h3>
+ *       <button onClick={() => addToCart(product, 1)}>
+ *         Agregar al carrito
+ *       </button>
+ *       <span>Items en carrito: {getTotalItems()}</span>
+ *     </div>
+ *   );
+ * }
+ */
 export const useCartStore = create(
   persist<CartState>(
     (set, get) => ({

@@ -1,9 +1,37 @@
-import {useCartStore} from "@/store/useCartStore";
-import {CardProductCart} from "./CardProductCart";
-import {formatToMoney} from "@/helpers/formats/FormatMoney";
-import {CustomerInfo} from "@/types/Invoice";
 import {toast} from "sonner";
 
+import {CardProductCart} from "./CardProductCart";
+import {useCartStore} from "@/store/useCartStore";
+import {formatToMoney} from "@/helpers/formats/FormatMoney";
+import {CustomerInfo} from "@/types/Invoice";
+
+/**
+ * Componente que muestra el carrito de compras completo con su contenido
+ * y cálculos de totales.
+ *
+ * Este componente:
+ * - Muestra la lista de productos en el carrito usando CardProductCart
+ * - Presenta un mensaje cuando el carrito está vacío
+ * - Calcula y muestra el subtotal, impuestos y total general
+ * - Proporciona un botón para proceder al pago
+ *
+ * Utiliza el store global useCartStore para obtener:
+ * - Los items del carrito
+ * - Funciones para calcular subtotales, impuestos y totales
+ *
+ * @returns {JSX.Element} Componente renderizado del carrito
+ *
+ * @example
+ * // Uso dentro de una página o componente
+ * function CartPage() {
+ *   return (
+ *     <div>
+ *       <h1>Tu Carrito</h1>
+ *       <Cart />
+ *     </div>
+ *   );
+ * }
+ */
 export function Cart() {
   const {items, getSubtotal, getTotalTax, getGrandTotal, checkout} =
     useCartStore();

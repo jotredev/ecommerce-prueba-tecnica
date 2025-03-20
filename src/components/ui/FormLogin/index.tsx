@@ -10,6 +10,37 @@ import {schemaLogin} from "@/types/User";
 import {IoReloadOutline} from "react-icons/io5";
 import {useAuthStore} from "@/store/useAuthStore";
 
+/**
+ * Componente que implementa el formulario de inicio de sesión.
+ *
+ * Este componente permite a los usuarios iniciar sesión en la aplicación
+ * seleccionando su nombre de usuario y rol (cliente o administrador).
+ * No implementa autenticación real, sino una simulación para la prueba técnica.
+ *
+ * Características principales:
+ * - Campos para nombre de usuario y selección de rol
+ * - Validación de formulario mediante React Hook Form y Zod
+ * - Redirección automática según el rol seleccionado
+ * - Integración con el store de autenticación mediante Zustand
+ * - Notificaciones de éxito mediante toast
+ *
+ * Tras un inicio de sesión exitoso, los usuarios cliente son redirigidos
+ * a la página principal, mientras que los administradores son redirigidos
+ * al panel de administración.
+ *
+ * @returns {JSX.Element} Componente de formulario de inicio de sesión renderizado
+ *
+ * @example
+ * // Uso básico del componente
+ * function LoginPage() {
+ *   return (
+ *     <div className="login-container">
+ *       <h1>Iniciar Sesión</h1>
+ *       <FormLogin />
+ *     </div>
+ *   );
+ * }
+ */
 export function FormLogin() {
   const [isPending, startTransition] = useTransition();
   const {login} = useAuthStore();
