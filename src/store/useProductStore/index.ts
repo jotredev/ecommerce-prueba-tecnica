@@ -32,5 +32,19 @@ export const useProductStore = create<ProductState>((set) => ({
 
       return {products: updatedProducts};
     });
+  },
+  // Función para incrementar un producto y su cantidad
+  increaseStock: (productId: number, quantity: number) => {
+    set((state) => {
+      const updatedProducts = state.products.map((product) =>
+        product.id === productId
+          ? {...product, stock: product.stock + quantity}
+          : product
+      );
+
+      // Actualizamos los productos en el local storage
+      localStorage.setItem("products", JSON.stringify(updatedProducts));
+      return {products: updatedProducts};
+    });
   }
 }));

@@ -14,7 +14,7 @@ export function FormBilling() {
       </div>
       <div className="grid gap-2">
         <Label htmlFor="email">Correo electrónico</Label>
-        <Input type="email" placeholder="6145221122" id="email" />
+        <Input type="email" placeholder="example@gmail.com" id="email" />
       </div>
       <div className="grid gap-2">
         <Label htmlFor="country">País</Label>
