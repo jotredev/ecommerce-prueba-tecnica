@@ -1,0 +1,22 @@
+{
+  "name": "ecommerce-monorepo",
+  "version": "0.0.1",
+  "private": "true",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "pnpm --filter ./apps/ecommerce dev",
+    "build": "pnpm --filter './packages/**' build && pnpm --filter ecommerce build",
+    "lint": "pnpm --filter './packages/**' lint && pnpm --filter ecommerce lint",
+    "storybook": "pnpm --filter ./packages/ui-components storybook",
+    "build-storybook": "pnpm --filter ui-components build-storybook"
+  },
+  "devDependencies": {
+    "turbo": "^2.4.4",
+    "typescript": "~5.7.2"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.5.0"
+}
