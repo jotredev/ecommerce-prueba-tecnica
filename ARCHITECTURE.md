@@ -18,16 +18,16 @@ La Tiendita sigue una arquitectura frontend moderna basada en componentes con ge
 
 ### **`src/`**
 
-**`actions/`** - Acciones para interactuar con APIs externas
-**`assets/`** - Recursos estáticos y mocks de datos
-**`components/`** - Componentes reutilizables
-**`components/ui`** - Componentes de interfaz de usuario
-**`helpers/`** - Funciones auxiliares (formateo, etc.)
-**`layouts/`** - Layouts principales de la aplicación
-**`lib/`** - Utilidades y configuraciones
-**`pages/`** - Páginas principales de la aplicación
-**`stores/`** - Stores de Zustand para el manejo del estado global
-**`types/`** - Definiciones de tipos TypeScript
+- **`actions/`** - Acciones para interactuar con APIs externas
+- **`assets/`** - Recursos estáticos y mocks de datos
+- **`components/`** - Componentes reutilizables
+  - **`/ui`** - Componentes de interfaz de usuario
+- **`helpers/`** - Funciones auxiliares (formateo, etc.)
+- **`layouts/`** - Layouts principales de la aplicación
+- **`lib/`** - Utilidades y configuraciones
+- **`pages/`** - Páginas principales de la aplicación
+- **`stores/`** - Stores de Zustand para el manejo del estado global
+- **`types/`** - Definiciones de tipos TypeScript
 
 ### Explicación de la Estructura
 
