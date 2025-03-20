@@ -10,6 +10,36 @@ import {registerLocation} from "@/actions/submit-location-client";
 import {toast} from "sonner";
 import {IoReloadOutline} from "react-icons/io5";
 
+/**
+ * Componente que implementa el formulario de datos de facturación y envío.
+ *
+ * Este componente permite al usuario introducir sus datos personales y de envío,
+ * valida esta información contra un esquema Zod, y verifica que el país de envío
+ * se encuentre dentro del continente americano utilizando una API externa.
+ *
+ * Características principales:
+ * - Campos para nombre, teléfono, correo y país
+ * - Validación de formulario mediante React Hook Form y Zod
+ * - Verificación asíncrona del país de envío
+ * - Indicador de carga durante la verificación
+ * - Notificaciones de éxito o error mediante toast
+ *
+ * Cuando la validación es exitosa, los datos quedan disponibles para el proceso de checkout.
+ * Si hay errores, se muestran mensajes descriptivos bajo cada campo.
+ *
+ * @returns {JSX.Element} Componente de formulario de facturación renderizado
+ *
+ * @example
+ * // Uso básico dentro de una página de checkout
+ * function CheckoutPage() {
+ *   return (
+ *     <div className="checkout-container">
+ *       <h2>Información de Envío</h2>
+ *       <FormBilling />
+ *     </div>
+ *   );
+ * }
+ */
 export function FormBilling() {
   const [isPending, startTransition] = useTransition();
   const [isValidCountry, setIsValidCountry] = useState<boolean>(false);

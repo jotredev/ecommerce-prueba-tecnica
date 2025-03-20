@@ -4,10 +4,45 @@ import {useProductStore} from "@/store/useProductStore";
 import {CartItem} from "@/types/Product";
 import {IoTrashOutline} from "react-icons/io5";
 
+/**
+ * Props para el componente CardProductCart
+ *
+ * @interface CardProductCartProps
+ * @property {CartItem} cartItem - Item del carrito que contiene el producto y su cantidad
+ */
 interface CardProductCartProps {
   cartItem: CartItem;
 }
 
+/**
+ * Componente que muestra un producto individual dentro del carrito con controles
+ * para ajustar la cantidad o eliminarlo.
+ *
+ * Este componente:
+ * - Muestra información básica del producto (nombre, precio)
+ * - Calcula y muestra el subtotal basado en cantidad
+ * - Proporciona controles para incrementar/decrementar cantidad
+ * - Incluye un botón para eliminar el producto del carrito
+ * - Verifica el stock disponible antes de permitir incrementos
+ *
+ * Utiliza los stores:
+ * - useCartStore: Para actualizar cantidades y eliminar productos
+ * - useProductStore: Para verificar el stock actual
+ *
+ * @param {CardProductCartProps} props - Propiedades del componente
+ * @param {CartItem} props.cartItem - Item del carrito con el producto y su cantidad
+ *
+ * @returns {JSX.Element} Componente renderizado de un producto en el carrito
+ *
+ * @example
+ * // Uso dentro del componente Cart
+ * <CardProductCart
+ *   cartItem={{
+ *     product: {id: 1, name: 'Manzana', price: 2000, tax: 0.19, stock: 10, category: 'Frutas'},
+ *     quantity: 2
+ *   }}
+ * />
+ */
 export function CardProductCart({cartItem}: CardProductCartProps) {
   const {product, quantity} = cartItem;
   const {updateQuantity, removeFromCart} = useCartStore();
