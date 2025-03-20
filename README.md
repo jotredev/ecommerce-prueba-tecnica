@@ -61,18 +61,18 @@ Plataforma de e-commerce con funcionalidades diferenciadas para usuarios cliente
 
 **src/**
 
-1. **actions/** - Acciones para interactuar con APIs externas
-2. **assets/** - Recursos estáticos y mocks de datos
-3. **components/** - Componentes reutilizables
+1. `**actions/**` - Acciones para interactuar con APIs externas
+2. `**assets/**` - Recursos estáticos y mocks de datos
+3. `**components/**` - Componentes reutilizables
 
-- **ui** - Componentes de interfaz de usuario
+   - `**ui**` - Componentes de interfaz de usuario
 
-4. **helpers/** - Funciones auxiliares (formateo, etc.)
-5. **layouts/** - Layouts principales de la aplicación
-6. **lib/** - Utilidades y configuraciones
-7. **pages/** - Páginas principales de la aplicación
-8. **stores/** - Stores de Zustand para el manejo del estado global
-9. **types/** - Definiciones de tipos TypeScript
+4. `**helpers/**` - Funciones auxiliares (formateo, etc.)
+5. `**layouts/**` - Layouts principales de la aplicación
+6. `**lib/**` - Utilidades y configuraciones
+7. `**pages/**` - Páginas principales de la aplicación
+8. `**stores/**` - Stores de Zustand para el manejo del estado global
+9. `**types/**` - Definiciones de tipos TypeScript
 
 ## Instalación y Configuración
 
