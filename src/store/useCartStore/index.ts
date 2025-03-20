@@ -3,8 +3,11 @@ import {createJSONStorage, persist} from "zustand/middleware";
 
 import {CartState, Product} from "@/types/Product";
 import {useProductStore} from "@/store/useProductStore";
+import {useInvoiceStore} from "@/store/useInvoiceStore";
+import {CustomerInfo} from "@/types/Invoice";
 
 const productStore = () => useProductStore.getState();
+const invoiceStore = () => useInvoiceStore.getState();
 
 export const useCartStore = create(
   persist<CartState>(
@@ -133,14 +136,24 @@ export const useCartStore = create(
         set({items: []});
       },
       // Función para realizar el checkout
-      checkout: () => {
-        const {items} = get();
+      checkout: (customerInfo: CustomerInfo) => {
+        const invoiceStoreRef = invoiceStore();
+        const {items, getSubtotal, getTotalTax, getGrandTotal} = get();
+
+        // Creamos una nueva factura
+        const invoice = invoiceStoreRef.createInvoice(
+          customerInfo,
+          items,
+          getSubtotal(),
+          getTotalTax(),
+          getGrandTotal()
+        );
 
         // Limpiamos el carrito sin restaurar el stock
         set({items: []});
 
         // Retornamos los productos comprados
-        return items;
+        return invoice;
       },
 
       // Función para obtener el total de productos en el carrito

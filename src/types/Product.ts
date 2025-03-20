@@ -1,3 +1,5 @@
+import {CustomerInfo, Invoice} from "@/types/Invoice";
+
 export type Product = {
   id: number;
   name: string;
@@ -25,7 +27,7 @@ export interface CartState {
   removeFromCart: (productId: number) => void;
   updateQuantity: (productId: number, quantity: number) => void;
   clearCart: () => void;
-  checkout: () => CartItem[];
+  checkout: (customerInfo: CustomerInfo) => Invoice;
   getTotalItems: () => number;
   getSubtotal: () => number;
   getTotalTax: () => number;

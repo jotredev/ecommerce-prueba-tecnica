@@ -1,13 +1,32 @@
 import {useCartStore} from "@/store/useCartStore";
 import {CardProductCart} from "./CardProductCart";
 import {formatToMoney} from "@/helpers/formats/FormatMoney";
+import {CustomerInfo} from "@/types/Invoice";
+import {toast} from "sonner";
 
 export function Cart() {
-  const {items, getSubtotal, getTotalTax, getGrandTotal} = useCartStore();
+  const {items, getSubtotal, getTotalTax, getGrandTotal, checkout} =
+    useCartStore();
 
   const subtotal = getSubtotal();
   const taxes = getTotalTax();
   const total = getGrandTotal();
+
+  function handleCheckout() {
+    const customerInfoString = localStorage.getItem("customer-info");
+    if (items.length > 0) {
+      if (customerInfoString) {
+        const customerInfo: CustomerInfo = JSON.parse(customerInfoString);
+        checkout(customerInfo);
+        localStorage.removeItem("customer-info");
+        toast.success("Compra realizada con éxito");
+      } else {
+        toast.error("Por favor, ingrese la información del cliente");
+      }
+    } else {
+      toast.error("No hay productos en el carrito");
+    }
+  }
 
   return (
     <div className="bg-secondary p-5 rounded-xl">
@@ -45,7 +64,10 @@ export function Cart() {
             </ul>
           </div>
           <div className="mt-5">
-            <button className="w-full flex items-center justify-center h-10 rounded-full bg-primary text-white cursor-pointer">
+            <button
+              className="w-full flex items-center justify-center h-10 rounded-full bg-primary text-white cursor-pointer"
+              onClick={handleCheckout}
+            >
               Pagar
             </button>
           </div>
