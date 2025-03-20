@@ -37,7 +37,18 @@ export async function registerLocation(values: z.infer<typeof schemaLocation>) {
     );
 
     if (verifyCountry) {
-      // Guardamos los datos en el localstorage
+      // El país pertenece a la región de América
+      const countryName = americasCountries.find(
+        (c: Country) => c.cca2 === country
+      );
+
+      // Guardamos los datos del cliente en el localstorage
+
+      localStorage.setItem(
+        "customer-info",
+        JSON.stringify({...data, country: countryName?.name.common})
+      );
+
       return {
         response: "success",
         message: "El país pertenece a la región de América"

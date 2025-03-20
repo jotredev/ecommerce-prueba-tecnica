@@ -5,13 +5,28 @@ import {Input} from "@/components/ui/Input";
 import {Label} from "@/components/ui/Label";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {schemaLocation} from "@/types/Client";
-import {useTransition} from "react";
+import {useEffect, useState, useTransition} from "react";
 import {registerLocation} from "@/actions/submit-location-client";
 import {toast} from "sonner";
 import {IoReloadOutline} from "react-icons/io5";
 
 export function FormBilling() {
   const [isPending, startTransition] = useTransition();
+  const [isValidCountry, setIsValidCountry] = useState<boolean>(false);
+
+  useEffect(() => {
+    (() => {
+      const customerInfo = localStorage.getItem("customer-info");
+
+      if (customerInfo) {
+        const {country} = JSON.parse(customerInfo);
+
+        if (country) {
+          setIsValidCountry(true);
+        }
+      }
+    })();
+  }, [isValidCountry]);
 
   const {
     register,
@@ -36,6 +51,7 @@ export function FormBilling() {
         toast.error(message);
       } else {
         toast.success(message);
+        setIsValidCountry(true);
         reset();
       }
     });
@@ -91,19 +107,26 @@ export function FormBilling() {
           <p className="text-xs text-red-500">{errors.country.message}</p>
         )}
       </div>
-      <button
-        className="flex items-center justify-center gap-2 h-10 rounded-full w-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors duration-150 cursor-pointer"
-        disabled={isPending}
-      >
-        {isPending ? (
-          <>
-            <IoReloadOutline className="size-4 animate-spin" />
-            Verificando...
-          </>
-        ) : (
-          "Verificar disponibilidad de envío"
-        )}
-      </button>
+      {isValidCountry ? (
+        <p className="text-xs text-green-500">
+          <strong>Nota:</strong> Ya has registrado un país de la región de
+          América
+        </p>
+      ) : (
+        <button
+          className="flex items-center justify-center gap-2 h-10 rounded-full w-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors duration-150 cursor-pointer"
+          disabled={isPending}
+        >
+          {isPending ? (
+            <>
+              <IoReloadOutline className="size-4 animate-spin" />
+              Verificando...
+            </>
+          ) : (
+            "Verificar disponibilidad de envío"
+          )}
+        </button>
+      )}
     </form>
   );
 }
