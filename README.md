@@ -54,20 +54,25 @@ Plataforma de e-commerce con funcionalidades diferenciadas para usuarios cliente
 - Contenedor/Presentacional
 - Observer Pattern
 - Repository Pattern
+- Singleton Pattern
+- Adapters Pattern
 
 ## Estructura del Proyecto
 
-src/
-|--- actions/ # Acciones para interactuar con APIs externas
-|--- assets/ # Recursos estáticos y mocks de datos
-|--- components/ # Componentes reutilizables
-| |--- ui/ # Componentes de interfaz de usuario
-|--- helpers/ # Funciones auxiliares (formateo, etc.)
-|--- layouts/ # Layouts principales de la aplicación
-|--- lib/ # Utilidades y configuraciones
-|--- pages/ # Páginas principales de la aplicación
-|--- store/ # Stores Zustand para estado global
-|--- types/ # Definiciones de tipos TypeScript
+**src/**
+
+1. **actions/** - Acciones para interactuar con APIs externas
+2. **assets/** - Recursos estáticos y mocks de datos
+3. **components/** - Componentes reutilizables
+
+- **ui** - Componentes de interfaz de usuario
+
+4. **helpers/** - Funciones auxiliares (formateo, etc.)
+5. **layouts/** - Layouts principales de la aplicación
+6. **lib/** - Utilidades y configuraciones
+7. **pages/** - Páginas principales de la aplicación
+8. **stores/** - Stores de Zustand para el manejo del estado global
+9. **types/** - Definiciones de tipos TypeScript
 
 ## Instalación y Configuración
 
@@ -176,6 +181,10 @@ La aplicación implementa un flujo de datos unidireccional:
 - Las acciones del usuario disparan métodos en los stores.
 - Los componentes se re-renderizan automáticamente cuando el estado cambia.
 
-# Autor
+## Autor
 
-Desarrollado como prueba técnica integral para Senior Frontend por [Jorge Trejo](@jotredev)
+Desarrollado como prueba técnica integral para Senior Frontend por [@jotredev](https://www.github.com/jotredev)
+
+## Arquitectura de la aplicación
+
+[Arquitectura](https://github.com/jotredev/ecommerce-prueba-tecnica/blob/main/ARCHITECTURE.md)

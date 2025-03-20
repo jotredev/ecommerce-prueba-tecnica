@@ -1,4 +1,4 @@
-### Archivo de arquitectura
+# Arquitectura
 
 Este documento describe la arquitectura detallada, patrones de diseño y decisiones técnicas implementadas en el proyecto de e-commerce La Tiendita.
 
@@ -14,19 +14,22 @@ La Tiendita sigue una arquitectura frontend moderna basada en componentes con ge
 4. **Persistencia local**: Almacenamiento en localStorage para productos, carrito y facturas.
 5. **Tipado estático**: Uso extensivo de TypeScript para garantizar la integridad de datos.
 
-## Estructura de Carpetas
+## Estructura del Proyecto
 
-src/
-|--- actions/ # Acciones para interactuar con APIs externas
-|--- assets/ # Recursos estáticos y mocks de datos
-|--- components/ # Componentes reutilizables
-| |--- ui/ # Componentes de interfaz de usuario
-|--- helpers/ # Funciones auxiliares (formateo, etc.)
-|--- layouts/ # Layouts principales de la aplicación
-|--- lib/ # Utilidades y configuraciones
-|--- pages/ # Páginas principales de la aplicación
-|--- store/ # Stores Zustand para estado global
-|--- types/ # Definiciones de tipos TypeScript
+**src/**
+
+1. **actions/** - Acciones para interactuar con APIs externas
+2. **assets/** - Recursos estáticos y mocks de datos
+3. **components/** - Componentes reutilizables
+
+- **ui** - Componentes de interfaz de usuario
+
+4. **helpers/** - Funciones auxiliares (formateo, etc.)
+5. **layouts/** - Layouts principales de la aplicación
+6. **lib/** - Utilidades y configuraciones
+7. **pages/** - Páginas principales de la aplicación
+8. **stores/** - Stores de Zustand para el manejo del estado global
+9. **types/** - Definiciones de tipos TypeScript
 
 ### Explicación de la Estructura
 
