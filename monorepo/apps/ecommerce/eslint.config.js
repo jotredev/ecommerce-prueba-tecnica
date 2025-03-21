@@ -22,20 +22,7 @@ export default tseslint.config(
       "react-refresh/only-export-components": [
         "warn",
         {allowConstantExport: true}
-      ],
-      "require-jsdoc": [
-        "warn",
-        {
-          require: {
-            FunctionDeclaration: true,
-            MethodDefinition: true,
-            ClassDeclaration: true,
-            ArrowFunctionExpression: false,
-            FunctionExpression: false
-          }
-        }
-      ],
-      "valid-jsdoc": ["warn"]
+      ]
     }
   }
 );

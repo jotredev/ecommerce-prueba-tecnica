@@ -1,14 +1,14 @@
+import {useEffect, useState, useTransition} from "react";
+
 import {z} from "zod";
 import {useForm} from "react-hook-form";
-
-import {Input} from "@/components/ui/Input";
-import {Label} from "@/components/ui/Label";
 import {zodResolver} from "@hookform/resolvers/zod";
+import {Label} from "@/components/ui/Label";
 import {schemaLocation} from "@/types/Client";
-import {useEffect, useState, useTransition} from "react";
 import {registerLocation} from "@/actions/submit-location-client";
 import {toast} from "sonner";
 import {IoReloadOutline} from "react-icons/io5";
+import {Input} from "@monorepo/ui-components";
 
 /**
  * Componente que implementa el formulario de datos de facturación y envío.
