@@ -6,13 +6,5 @@ export default defineConfig({
   dts: true,
   external: ["react", "react-dom"],
   sourcemap: true,
-  clean: true,
-  loader: {
-    ".css": "file"
-  },
-  outExtension({format}) {
-    return {
-      js: format === "esm" ? ".mjs" : ".js"
-    };
-  }
+  clean: true
 });
