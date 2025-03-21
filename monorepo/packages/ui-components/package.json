@@ -1,5 +1,5 @@
 {
-  "name": "@monorepo/ui-components",
+  "name": "test-lib-ui-components",
   "version": "0.0.1",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
