@@ -1,10 +1,10 @@
-import React, {ComponentProps} from "react";
-import {cn} from "../lib/utils";
+import { ComponentProps } from "react";
+import { cn } from "../lib/utils";
 
 /**
  * Componente Input que proporciona un campo de entrada estandarizado
  */
-export function Input({className, type, ...props}: ComponentProps<"input">) {
+export function Input({ className, type, ...props }: ComponentProps<"input">) {
   return (
     <input
       type={type}
