@@ -1,10 +1,15 @@
 import { defineConfig } from "tsup";
 
 export default defineConfig({
-  entry: ["src/index.ts"],
-  format: ["esm", "cjs"],
+  entry: ["src/index.tsx"],
+  format: ["cjs", "esm"],
   dts: true,
-  external: ["react", "react-dom"],
+  external: ["react"],
   sourcemap: true,
   clean: true,
+  injectStyle: false,
+  keepNames: true,
+  loader: {
+    ".css": "copy",
+  },
 });

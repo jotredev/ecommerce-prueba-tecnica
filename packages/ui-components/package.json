@@ -12,7 +12,8 @@
     },
     "./button": "./src/button",
     "./input": "./src/input",
-    "./label": "./src/label"
+    "./label": "./src/label",
+    "./style.css": "./dist/index.css"
   },
   "sideEffects": [
     "*.css",
@@ -22,10 +23,9 @@
   "files": [
     "dist/**"
   ],
-  "style": "dist/index.css",
   "scripts": {
-    "build": "tsup src/index.tsx --format esm,cjs --dts --external react",
-    "dev": "tsup src/index.tsx --format esm,cjs --watch --dts --external react",
+    "build": "tsup",
+    "dev": "tsup --watch",
     "lint": "eslint . --max-warnings 0",
     "generate:component": "turbo gen react-component",
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
