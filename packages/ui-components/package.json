@@ -4,6 +4,11 @@
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
+  "exports": {
+    "./button": "./src/button",
+    "./input": "./src/input",
+    "./label": "./src/label"
+  },
   "sideEffects": [
     "*.css",
     "**/*.css"
@@ -16,7 +21,8 @@
   "scripts": {
     "build": "tsup src/index.tsx --format esm,cjs --dts --external react",
     "dev": "tsup src/index.tsx --format esm,cjs --watch --dts --external react",
-    "lint": "eslint \"src/**/*.ts*\"",
+    "lint": "eslint . --max-warnings 0",
+    "generate:component": "turbo gen react-component",
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"

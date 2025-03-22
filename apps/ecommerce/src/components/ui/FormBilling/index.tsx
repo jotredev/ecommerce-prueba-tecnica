@@ -1,14 +1,14 @@
-import {useEffect, useState, useTransition} from "react";
+import { useEffect, useState, useTransition } from "react";
 
-import {z} from "zod";
-import {useForm} from "react-hook-form";
-import {zodResolver} from "@hookform/resolvers/zod";
-import {Label} from "@/components/ui/Label";
-import {schemaLocation} from "@/types/Client";
-import {registerLocation} from "@/actions/submit-location-client";
-import {toast} from "sonner";
-import {IoReloadOutline} from "react-icons/io5";
-import {Input} from "@monorepo/ui-components";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Label } from "@/components/ui/Label";
+import { schemaLocation } from "@/types/Client";
+import { registerLocation } from "@/actions/submit-location-client";
+import { toast } from "sonner";
+import { Input } from "@jorgeetrejoo/react-ui-components";
+import { IoReloadOutline } from "react-icons/io5";
 
 /**
  * Componente que implementa el formulario de datos de facturación y envío.
@@ -49,7 +49,7 @@ export function FormBilling() {
       const customerInfo = localStorage.getItem("customer-info");
 
       if (customerInfo) {
-        const {country} = JSON.parse(customerInfo);
+        const { country } = JSON.parse(customerInfo);
 
         if (country) {
           setIsValidCountry(true);
@@ -61,21 +61,21 @@ export function FormBilling() {
   const {
     register,
     handleSubmit,
-    formState: {errors},
-    reset
+    formState: { errors },
+    reset,
   } = useForm<z.infer<typeof schemaLocation>>({
     resolver: zodResolver(schemaLocation),
     defaultValues: {
       name: "",
       phone: "",
       email: "",
-      country: ""
-    }
+      country: "",
+    },
   });
 
   async function onSubmit(values: z.infer<typeof schemaLocation>) {
     startTransition(async () => {
-      const {response, message} = await registerLocation(values);
+      const { response, message } = await registerLocation(values);
 
       if (response === "error") {
         toast.error(message);
@@ -90,10 +90,12 @@ export function FormBilling() {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
       <div className="grid gap-2">
-        <Label htmlFor="name">Combre completo</Label>
+        <Label htmlFor="name">Nombre completo</Label>
         <Input
+          data-testid="input-name"
           placeholder="Antonio Montes De Carrvajal"
           id="name"
+          className="rounded-full"
           {...register("name")}
         />
         {errors.name && (
@@ -102,7 +104,13 @@ export function FormBilling() {
       </div>
       <div className="grid gap-2">
         <Label htmlFor="phone">Teléfono</Label>
-        <Input placeholder="6145221122" id="phone" {...register("phone")} />
+        <Input
+          data-testid="input-phone"
+          placeholder="6145221122"
+          id="phone"
+          {...register("phone")}
+          className="rounded-full"
+        />
         {errors.phone && (
           <p className="text-xs text-red-500">{errors.phone.message}</p>
         )}
@@ -110,9 +118,11 @@ export function FormBilling() {
       <div className="grid gap-2">
         <Label htmlFor="email">Correo electrónico</Label>
         <Input
+          data-testid="input-email"
           type="email"
           placeholder="example@gmail.com"
           id="email"
+          className="rounded-full"
           {...register("email")}
         />
         {errors.email && (
@@ -122,6 +132,7 @@ export function FormBilling() {
       <div className="grid gap-2">
         <Label htmlFor="country">País</Label>
         <select
+          data-testid="input-country"
           {...register("country")}
           className="h-10 rounded-full border border-border outline-none px-3"
         >
@@ -138,12 +149,16 @@ export function FormBilling() {
         )}
       </div>
       {isValidCountry ? (
-        <p className="text-xs text-green-500">
+        <p
+          data-testid="message-customer-registered"
+          className="text-xs text-green-500"
+        >
           <strong>Nota:</strong> Ya has registrado un país de la región de
           América
         </p>
       ) : (
         <button
+          data-testid="button-submit"
           className="flex items-center justify-center gap-2 h-10 rounded-full w-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors duration-150 cursor-pointer"
           disabled={isPending}
         >

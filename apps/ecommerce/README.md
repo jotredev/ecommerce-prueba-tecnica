@@ -179,6 +179,220 @@ La aplicación implementa un flujo de datos unidireccional:
 - Las acciones del usuario disparan métodos en los stores.
 - Los componentes se re-renderizan automáticamente cuando el estado cambia.
 
+## Testing de Componentes
+
+### Testing del Componente ProductCard
+
+El proyecto implementa pruebas unitarias completas para el componente ProductCard utilizando Vitest y React Testing Library, asegurando el correcto funcionamiento en diferentes escenarios de uso.
+
+### Tests Implementados
+
+Se han desarrollado tres pruebas principales que validan aspectos críticos del componente:
+
+1. Renderizado correcto de la información del producto
+2. Interacción con el botón "Agregar a carrito"
+3. Visualización correcta del estado "Sin stock"
+
+### Herramientas de Testing Utilizadas
+
+**Container**
+
+```tsx
+const { container } = render(<ProductCard product={mockProduct} />);
+const productCard = container.querySelector('[data-testid="product-card"]');
+```
+
+- Proporciona acceso directo al DOM donde se renderiza el componente
+- Permite realizar consultas mediante atributos `data-testid` especialmente añadidos para testing
+- Facilita la selección de elementos específicos sin depender de clases CSS o estructura DOM que podría cambiar
+
+**Screen**
+
+```tsx
+expect(screen.getByTestId("product-category")).toHaveTextContent(
+  "Frutas Frescas"
+);
+expect(screen.getByTestId("product-stock")).toHaveTextContent("Stock (10)");
+expect(screen.getByTestId("product-button-add-to-cart")).toHaveTextContent(
+  "Agregar a carrito"
+);
+```
+
+- Ofrece una API global para acceder a elementos del DOM
+- Proporciona métodos de búsqueda basados en atributos `data-testid`
+- Facilita aserciones sobre el contenido textual de los elementos
+
+**WaitFor**
+
+```tsx
+await waitFor(() => {
+  expect(addToCartMock).toHaveBeenCalledWith(mockProduct, 1);
+});
+```
+
+- Permite hacer aserciones sobre cambios asíncronos
+- Espera a que las condiciones especificadas se cumplan antes de continuar
+- Mejora la robustez de tests con operaciones que no son inmediatas
+
+**Act**
+
+```tsx
+await act(async () => {
+  fireEvent.click(addButton);
+});
+```
+
+- Garantiza que los eventos de React se procesen completamente
+- Asegura que todas las actualizaciones de estado se apliquen antes de las aserciones
+- Previene advertencias relacionadas con actualizaciones de UI no sincronizadas
+
+### Testing del la función FormatMoney
+
+El proyecto implementa pruebas unitarias para la función utilitaria formatMoney que convierte valores numéricos a formato de moneda, utilizando Vitest y React Testing Library.
+
+### Test implementados
+
+Se han desarrollado tres pruebas principales que validan aspectos críticos de la función:
+
+1. Formateo correcto de valores monetarios enteros
+2. Formateo preciso de valores monetarios negativos
+3. Manejo adecuado de valores con decimales
+
+### Herramientas de Testing Utilizadas
+
+**Container**
+
+```tsx
+const { container } = render(<PriceDisplay amount={1000} />);
+```
+
+- Proporciona acceso al elemento DOM raíz del componente
+- Permite verificar la correcta estructura mediante selectores específicos
+- Facilita la comprobación de la existencia de elementos contenedores
+
+**Screen**
+
+```tsx
+const priceElement = screen.getByTestId("formatted-price");
+expect(priceElement.textContent).toBe("$1,000.00");
+```
+
+- Simplifica la localización de elementos mediante atributos `data-testid`
+- Facilita la verificación del contenido textual formateado
+- Proporciona una API intuitiva para consultar elementos renderizados
+
+**WaitFor**
+
+```tsx
+await waitFor(() => {
+  expect(priceElement.textContent).toBe("$1,000.00");
+  expect(
+    container.querySelector('[data-testid="price-container"]')
+  ).toBeTruthy();
+});
+```
+
+- Asegura que los cambios en el DOM se hayan completado antes de hacer aserciones
+- Mejora la estabilidad de las pruebas esperando que los elementos estén disponibles
+- Permite verificar múltiples condiciones una vez se haya estabilizado el renderizado
+
+**Act**
+
+```tsx
+await act(async () => {
+  render(<PriceDisplay amount={-500} />);
+});
+```
+
+- Garantiza que todas las actualizaciones del estado de React se completen
+- Envuelve operaciones que podrían causar actualizaciones del estado
+- Evita advertencias relacionadas con actualizaciones de React no manejadas
+
+### Testing del Componente FormBilling
+
+El proyecto implementa pruebas unitarias completas para el componente FormBilling utilizando Vitest y React Testing Library, asegurando su correcto funcionamiento en diferentes escenarios de uso, incluyendo validación de formularios y comunicación con servicios externos.
+
+### Tests Implementados
+
+Se han desarrollado cuatro pruebas principales que validan aspectos críticos del componente:
+
+- Renderizado correcto de todos los campos obligatorios del formulario
+- Validación y envío correcto de datos del formulario
+- Manejo de errores cuando falla la validación del país
+- Mostrar mensaje informativo cuando el cliente ya ha registrado información
+
+### Herramientas de Testing Utilizadas
+
+**Screen**
+
+```tsx
+const inputName = screen.getByTestId("input-name");
+expect(inputName).toBeInTheDocument();
+```
+
+- Proporciona acceso global a los elementos del DOM renderizados
+- Permite localizar elementos mediante atributos `data-testid` específicos
+- Facilita aserciones sobre la presencia y contenido de los elementos
+
+**FireEvent**
+
+```tsx
+fireEvent.change(screen.getByTestId("input-name"), {
+  target: { value: "Jorge Trejo" },
+});
+```
+
+- Simula eventos de usuario como cambios en inputs y clics
+- Permite probar interacciones del usuario con el formulario
+- Mantiene actualizado el estado interno de los componentes
+
+**WaitFor**
+
+```tsx
+await waitFor(() => {
+  expect(registerLocation).toHaveBeenCalledWith(
+    expect.objectContaining({
+      name: "Jorge Trejo",
+      phone: "6144555555",
+      email: "test@gmail.com",
+      country: "MX",
+    })
+  );
+});
+```
+
+- Permite realizar aserciones sobre operaciones asíncronas
+- Espera a que una condición se cumpla antes de continuar
+- Ideal para probar llamadas a APIs y cambios de estado asíncronos
+
+**Act**
+
+```tsx
+await act(async () => {
+  fireEvent.click(screen.getByTestId("button-submit"));
+});
+```
+
+- Asegura que todas las actualizaciones de estado de React se completen
+- Envuelve operaciones que provocan cambios de estado asíncronos
+- Previene warnings relacionados con actualizaciones pendientes de UI
+
+**Mocks**
+
+```tsx
+vi.mock("@/actions/submit-location-client");
+vi.mock("sonner", () => ({
+  toast: {
+    success: vi.fn(),
+    error: vi.fn(),
+  },
+}));
+```
+
+- Aísla el componente de sus dependencias externas
+- Permite simular respuestas específicas de acciones
+- Facilita la verificación de llamadas a servicios externos y librerías
+
 ## Autor
 
 Desarrollado como prueba técnica integral para Senior Frontend por [@jotredev](https://www.github.com/jotredev)
