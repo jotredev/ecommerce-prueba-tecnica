@@ -1,9 +1,9 @@
-import {MouseEvent} from "react";
+import { MouseEvent } from "react";
 
-import {cn} from "@/lib/utils";
-import {useCartStore} from "@/store/useCartStore";
-import {useProductStore} from "@/store/useProductStore";
-import {Product} from "@/types/Product";
+import { cn } from "@/lib/utils";
+import { useCartStore } from "@/store/useCartStore";
+import { useProductStore } from "@/store/useProductStore";
+import { Product } from "@/types/Product";
 
 /**
  * Props para el componente ProductCard
@@ -53,9 +53,9 @@ interface ProductCardProps {
  *   </div>
  * );
  */
-export const ProductCard = ({product}: ProductCardProps) => {
-  const {addToCart} = useCartStore();
-  const {products} = useProductStore();
+export const ProductCard = ({ product }: ProductCardProps) => {
+  const { addToCart } = useCartStore();
+  const { products } = useProductStore();
 
   // Obtenemos el producto actual
   const currentProduct = products.find((p) => p.id === product.id) || product;
@@ -68,16 +68,23 @@ export const ProductCard = ({product}: ProductCardProps) => {
   };
 
   return (
-    <div className="flex flex-col border rounded-3xl border-border">
+    <div
+      data-testid="product-card"
+      className="flex flex-col border rounded-3xl border-border"
+    >
       <div className="flex flex-col flex-1 p-5">
         <h3 className="mb-2 text-lg font-medium text-gray-800 line-clamp-2">
           {currentProduct.name}
         </h3>
-        <p className="mb-4 text-xl font-bold text-primary">
+        <p
+          data-testid="product-price"
+          className="mb-4 text-xl font-bold text-primary"
+        >
           ${currentProduct.price.toFixed(2)}
         </p>
         <div className="flex items-center justify-between mt-auto text-sm">
           <span
+            data-testid="product-stock"
             className={cn(
               "",
               currentProduct.stock > 0
@@ -91,13 +98,17 @@ export const ProductCard = ({product}: ProductCardProps) => {
               ? `Stock (${currentProduct.stock})`
               : "Sin stock"}
           </span>
-          <span className="px-2 py-1 text-xs text-gray-600 bg-gray-100 rounded-full">
+          <span
+            data-testid="product-category"
+            className="px-2 py-1 text-xs text-gray-600 bg-gray-100 rounded-full"
+          >
             {currentProduct.category}
           </span>
         </div>
       </div>
       <div className="p-2">
         <button
+          data-testid="product-button-add-to-cart"
           className={cn(
             "w-full font-medium transition-colors duration-150 bg-transparent border rounded-full border-border h-9 hover:bg-secondary",
             currentProduct.stock > 0
