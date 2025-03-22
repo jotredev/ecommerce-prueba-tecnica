@@ -179,6 +179,72 @@ La aplicación implementa un flujo de datos unidireccional:
 - Las acciones del usuario disparan métodos en los stores.
 - Los componentes se re-renderizan automáticamente cuando el estado cambia.
 
+## Despliegue y CI/CD
+
+La aplicación implementa una estrategia de integración continua y despliegue continuo (CI/CD) utilizando servicios de AWS, lo que permite actualizaciones automáticas cada vez que se realizan cambios en el repositorio de GitHub.
+
+### Infraestructura AWS Utilizada
+
+- **Amazon S3**: Almacenamiento de los archivos estáticos generados por Vite
+- **Amazon CloudFront**: CDN para distribución global con HTTPS
+- **AWS IAM**: Gestión de permisos para despliegue seguro
+- **GitHub Actions**: Automatización del pipeline de CI/CD
+
+### Flujo de CI/CD Implementado
+
+1. **Integración Continua**:
+
+   - Cada push a la rama principal activa automáticamente el pipeline
+   - Se ejecutan pruebas unitarias con Vitest
+   - Se realiza verificación de tipos con TypeScript
+   - Se ejecuta el linter para asegurar calidad de código
+
+2. **Construcción**:
+
+   - Instalación de dependencias con pnpm
+   - Construcción de la aplicación con `pnpm build`
+   - Generación de archivos estáticos optimizados para producción
+
+3. **Despliegue Continuo**:
+   - Sincronización automática de los archivos de la carpeta `dist` con el bucket S3
+   - Invalidación de la caché de CloudFront para asegurar contenido actualizado
+   - Notificación de estado del despliegue
+
+### Configuración de Secretos para CI/CD
+
+Para implementar el pipeline de CI/CD de forma segura, se utilizan GitHub Secrets para proteger las credenciales de AWS:
+
+1. **Secretos Requeridos**:
+
+   - `AWS_ACCESS_KEY_ID`: Clave de acceso para el usuario IAM con permisos limitados
+   - `AWS_SECRET_ACCESS_KEY`: Clave secreta correspondiente
+   - `AWS_S3_BUCKET`: Nombre del bucket S3 para el despliegue
+   - `CLOUDFRONT_DISTRIBUTION_ID`: ID de la distribución de CloudFront
+   - `CLOUDFRONT_DOMAIN`: Dominio de CloudFront para acceder a la aplicación
+
+2. **Seguridad Implementada**:
+   - Credenciales con privilegios mínimos (principio de mínimo privilegio)
+   - Almacenamiento seguro de secretos en GitHub
+   - Política de IAM restrictiva para limitar acceso solo a recursos necesarios
+
+### Justificación de la Elección
+
+Se eligieron servicios AWS para el despliegue y CI/CD por las siguientes razones:
+
+1. **Escalabilidad**: S3 y CloudFront pueden manejar desde pequeños proyectos hasta aplicaciones de alto tráfico sin cambios de configuración.
+
+2. **Rendimiento**: CloudFront como CDN proporciona baja latencia a nivel global, crucial para una experiencia de usuario óptima en e-commerce.
+
+3. **Seguridad**: Implementación automática de HTTPS a través de CloudFront y gestión de permisos granular con IAM.
+
+4. **Costo-eficiencia**: El modelo de pago por uso de S3 y CloudFront resulta económico para aplicaciones frontend estáticas.
+
+5. **Compatibilidad con SPA**: La configuración de CloudFront permite manejar correctamente el enrutamiento del lado del cliente necesario para React Router.
+
+6. **Automatización**: La integración con GitHub Actions permite un flujo completamente automatizado sin intervención manual.
+
+Esta infraestructura garantiza que los cambios en el código se reflejen rápidamente en producción, manteniendo un alto estándar de calidad gracias a las pruebas automatizadas previas al despliegue.
+
 ## Testing de Componentes
 
 ### Testing del Componente ProductCard
