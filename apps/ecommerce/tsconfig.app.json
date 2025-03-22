@@ -23,7 +23,11 @@
     "noUncheckedSideEffectImports": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@jorgeetrejoo/react-ui-components": ["../../packages/ui-components/src"],
+      "@jorgeetrejoo/react-ui-components/*": [
+        "../../packages/ui-components/src/*"
+      ]
     }
   },
   "include": ["src", "src/test/setup-test-env.d.ts"]

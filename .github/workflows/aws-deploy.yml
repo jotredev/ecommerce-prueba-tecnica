@@ -60,17 +60,13 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      # Configurar caché de Turborepo para acelerar builds
-      - name: Setup Turborepo cache
-        uses: actions/cache@v3
-        with:
-          path: node_modules/.cache/turbo
-          key: ${{ runner.os }}-turbo-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-turbo-
+      # Primero compilamos la librería de componentes
+      - name: Build UI components
+        run: pnpm --filter '@jorgeetrejoo/react-ui-components' build
 
-      - name: Build UI components and application
-        run: pnpm turbo build
+      # Luego compilamos la aplicación
+      - name: Build ecommerce application
+        run: cd apps/ecommerce && pnpm build
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
