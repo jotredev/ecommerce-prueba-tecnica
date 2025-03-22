@@ -9,15 +9,40 @@
 }
 
 :root {
-  --background: oklch(1 0 0);
-  --border: oklch(0.922 0 0);
-  --primary: oklch(0.7 0.19 48);
-  --secondary: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
+  --background: #ffffff;
+  --border: #e5e7eb;
+  --primary: #3b82f6;
+  --secondary: #f9fafb;
+  --muted-foreground: #71717a;
 }
 
 @layer base {
   body {
     @apply bg-background;
   }
+}
+
+button.primary {
+  background-color: var(--primary);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  font-weight: 500;
+}
+
+input {
+  border: 1px solid var(--border);
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  outline: none;
+}
+
+input:focus {
+  border-color: var(--primary);
+}
+
+label {
+  font-size: 0.875rem;
+  font-weight: 500;
 }

@@ -2,5 +2,3 @@
 export * from "./button";
 export * from "./input";
 export * from "./label";
-
-import "./index.css";

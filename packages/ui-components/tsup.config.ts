@@ -7,9 +7,4 @@ export default defineConfig({
   external: ["react"],
   sourcemap: true,
   clean: true,
-  injectStyle: false,
-  keepNames: true,
-  loader: {
-    ".css": "copy",
-  },
 });

@@ -2,7 +2,8 @@ import { ComponentProps } from "react";
 import { cn } from "../lib/utils";
 
 /**
- * Componente Input que proporciona un campo de entrada estandarizado
+ * Componente Input que proporciona un campo de entrada estandarizado.
+ * Utiliza clases de Tailwind para los estilos.
  */
 export function Input({ className, type, ...props }: ComponentProps<"input">) {
   return (

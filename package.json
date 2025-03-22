@@ -5,7 +5,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "pnpm --filter ./apps/ecommerce dev",
+    "dev": "pnpm --filter '@jorgeetrejoo/react-ui-components' build && pnpm --filter ./apps/ecommerce dev",
     "build": "pnpm --filter './packages/**' build && pnpm --filter ./apps/ecommerce build",
     "lint": "pnpm --filter './packages/**' lint && pnpm --filter ./apps/ecommerce lint",
     "storybook": "pnpm --filter ./packages/ui-components storybook",

@@ -4,8 +4,8 @@ import "./index.css";
 import App from "./App.tsx";
 import { Toaster } from "sonner";
 
-// Estilos de la libería
-import "@jorgeetrejoo/react-ui-components/dist/index.css";
+// Ya no necesitamos importar los estilos de la librería externamente
+// Los componentes incluirán sus propios estilos
 
 createRoot(document.getElementById("root")!).render(
   <BrowserRouter>

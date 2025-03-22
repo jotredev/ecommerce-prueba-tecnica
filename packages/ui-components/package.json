@@ -12,13 +12,9 @@
     },
     "./button": "./src/button",
     "./input": "./src/input",
-    "./label": "./src/label",
-    "./style.css": "./dist/index.css"
+    "./label": "./src/label"
   },
-  "sideEffects": [
-    "*.css",
-    "**/*.css"
-  ],
+  "sideEffects": false,
   "license": "MIT",
   "files": [
     "dist/**"
