@@ -59,18 +59,86 @@ Plataforma de e-commerce con funcionalidades diferenciadas para usuarios cliente
 
 ## Estructura del Proyecto
 
-### **`src/`**
+Este proyecto está organizado como un monorepo con pnpm workspaces, lo que permite gestionar múltiples paquetes relacionados desde un único repositorio.
 
-- **`actions/`** - Acciones para interactuar con APIs externas
-- **`assets/`** - Recursos estáticos y mocks de datos
-- **`components/`** - Componentes reutilizables
-  - **`/ui`** - Componentes de interfaz de usuario
-- **`helpers/`** - Funciones auxiliares (formateo, etc.)
-- **`layouts/`** - Layouts principales de la aplicación
-- **`lib/`** - Utilidades y configuraciones
-- **`pages/`** - Páginas principales de la aplicación
-- **`stores/`** - Stores de Zustand para el manejo del estado global
-- **`types/`** - Definiciones de tipos TypeScript
+```
+/ecommerce-prueba-tecnica/              # Raíz del monorepo
+  /apps/                       # Aplicaciones
+    /ecommerce/                # Aplicación principal de e-commerce
+      /src/                    # Código fuente
+        /actions/              # Acciones para interactuar con APIs externas
+        /assets/               # Recursos estáticos y mocks de datos
+        /components/           # Componentes específicos de la aplicación
+        /helpers/              # Funciones auxiliares
+        /layouts/              # Layouts principales
+        /lib/                  # Utilidades y configuraciones
+        /pages/                # Páginas de la aplicación
+        /stores/               # Stores de Zustand
+        /types/                # Definiciones de tipos
+
+  /packages/                   # Paquetes y bibliotecas compartidas
+    /ui-components/            # Biblioteca de componentes UI reutilizables
+      /src/                    # Código fuente de componentes
+        /button/               # Componente Button
+        /input/                # Componente Input
+        /label/                # Componente Label
+        /lib/                  # Utilidades específicas de componentes
+      /tsup.config.ts          # Configuración de compilación
+```
+
+### Descripción de la estructura
+
+- **apps/ecommerce**: Contiene la aplicación principal con toda la lógica de negocio, interfaces y estado.
+- **packages/ui-components**: Biblioteca de componentes UI reutilizables que se comparten entre aplicaciones, con una API consistente y estilos unificados basados en Tailwind CSS.
+
+La estructura de monorepo ofrece varias ventajas:
+
+1. **Código compartido**: Los componentes UI pueden reutilizarse en múltiples aplicaciones
+2. **Desarrollo independiente**: Los equipos pueden trabajar en diferentes paquetes sin interferir entre sí
+3. **Versionado coordinado**: Las dependencias entre paquetes están claramente definidas
+4. **Pruebas más eficientes**: Las pruebas pueden ejecutarse solo en los paquetes modificados
+
+### Librería de componentes publicada
+
+Como parte de este proyecto, se ha desarrollado y publicado una librería de componentes React en npm:
+
+- **Nombre**: `@jorgeetrejoo/react-ui-components`
+- **Repositorio**: Parte del monorepo en `/packages/ui-components`
+- **Publicación**: Disponible públicamente en [npm](https://www.npmjs.com/package/@jorgeetrejoo/react-ui-components)
+- **Versión actual**: 0.0.6
+
+Esta librería proporciona componentes básicos como Button, Input y Label, utilizados en la aplicación de e-commerce. Los componentes están diseñados con Tailwind CSS e incluyen tipos TypeScript para una mejor experiencia de desarrollo.
+
+Para utilizar la librería en otros proyectos:
+
+```bash
+# Instalación con npm
+npm install @jorgeetrejoo/react-ui-components
+
+# Instalación con pnpm
+pnpm add @jorgeetrejoo/react-ui-components
+
+# Instalación con yarn
+yarn add @jorgeetrejoo/react-ui-components
+```
+
+Ejemplo de uso:
+
+```tsx
+import { Button, Input, Label } from "@jorgeetrejoo/react-ui-components";
+
+function LoginForm() {
+  return (
+    <form>
+      <div>
+        <Label htmlFor="email">Email</Label>
+        <Input id="email" type="email" placeholder="tu@email.com" />
+      </div>
+      <Button type="submit">Iniciar sesión</Button>
+    </form>
+  );
+}
+```
 
 ## Instalación y Configuración
 
@@ -202,6 +270,7 @@ La aplicación implementa una estrategia de integración continua y despliegue c
 2. **Construcción**:
 
    - Instalación de dependencias con pnpm
+   - Construcción de la librería de componentes UI
    - Construcción de la aplicación con `pnpm build`
    - Generación de archivos estáticos optimizados para producción
 
@@ -210,40 +279,188 @@ La aplicación implementa una estrategia de integración continua y despliegue c
    - Invalidación de la caché de CloudFront para asegurar contenido actualizado
    - Notificación de estado del despliegue
 
-### Configuración de Secretos para CI/CD
+### Configuración de GitHub Actions
+
+El archivo `.github/workflows/aws-deploy.yml` contiene la configuración completa:
+
+```yaml
+name: AWS CI/CD Deployment
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build packages UI components
+        run: pnpm --filter '@jorgeetrejoo/react-ui-components' build
+
+      - name: Run lint
+        run: cd apps/ecommerce && pnpm lint
+
+      - name: Run tests
+        run: cd apps/ecommerce && pnpm test
+
+  deploy:
+    name: Deploy
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Install dependencies
+        run: pnpm install
+
+      # Primero compilamos la librería de componentes
+      - name: Build UI components
+        run: pnpm --filter '@jorgeetrejoo/react-ui-components' build
+
+      # Luego compilamos la aplicación
+      - name: Build ecommerce application
+        run: cd apps/ecommerce && pnpm build
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Deploy to S3
+        run: |
+          aws s3 sync apps/ecommerce/dist/ s3://${{ secrets.AWS_S3_BUCKET }}/ --delete
+
+      - name: Invalidate CloudFront cache
+        run: |
+          aws cloudfront create-invalidation --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} --paths "/*"
+
+      - name: Deployment success notification
+        run: |
+          echo "✅ Despliegue correcto!"
+          echo "🌐 Website available at: https://${{ secrets.CLOUDFRONT_DOMAIN }}"
+```
+
+### Configuración de AWS
+
+#### 1. Política IAM para el usuario de despliegue
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:PutObject",
+        "s3:GetObject",
+        "s3:GetObjectVersion",
+        "s3:ListBucket",
+        "s3:DeleteObject",
+        "s3:PutObjectAcl"
+      ],
+      "Resource": [
+        "arn:aws:s3:::nombre-del-bucket",
+        "arn:aws:s3:::nombre-del-bucket/*"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "cloudfront:CreateInvalidation",
+        "cloudfront:GetInvalidation",
+        "cloudfront:ListInvalidations"
+      ],
+      "Resource": "arn:aws:cloudfront::123456789012:distribution/XXXXXXXXXXXXXXX"
+    }
+  ]
+}
+```
+
+#### 2. Política del bucket S3 para acceso público
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "PublicReadGetObject",
+      "Effect": "Allow",
+      "Principal": "*",
+      "Action": "s3:GetObject",
+      "Resource": "arn:aws:s3:::nombre-del-bucket/*"
+    }
+  ]
+}
+```
+
+#### 3. Configuración de CloudFront para aplicaciones SPA
+
+Para el correcto funcionamiento de la aplicación SPA, se configuraron páginas de error personalizadas en CloudFront:
+
+- **Default Root Object**: `index.html`
+- **Error Pages**:
+  - Código 403: Redirigir a `/index.html` con código 200
+  - Código 404: Redirigir a `/index.html` con código 200
+
+Esta configuración permite que el enrutamiento del lado del cliente funcione correctamente al acceder directamente a rutas específicas.
+
+### Secretos Requeridos en GitHub
 
 Para implementar el pipeline de CI/CD de forma segura, se utilizan GitHub Secrets para proteger las credenciales de AWS:
 
-1. **Secretos Requeridos**:
-
-   - `AWS_ACCESS_KEY_ID`: Clave de acceso para el usuario IAM con permisos limitados
-   - `AWS_SECRET_ACCESS_KEY`: Clave secreta correspondiente
-   - `AWS_S3_BUCKET`: Nombre del bucket S3 para el despliegue
-   - `CLOUDFRONT_DISTRIBUTION_ID`: ID de la distribución de CloudFront
-   - `CLOUDFRONT_DOMAIN`: Dominio de CloudFront para acceder a la aplicación
-
-2. **Seguridad Implementada**:
-   - Credenciales con privilegios mínimos (principio de mínimo privilegio)
-   - Almacenamiento seguro de secretos en GitHub
-   - Política de IAM restrictiva para limitar acceso solo a recursos necesarios
+- `AWS_ACCESS_KEY_ID`: Clave de acceso para el usuario IAM
+- `AWS_SECRET_ACCESS_KEY`: Clave secreta correspondiente
+- `AWS_S3_BUCKET`: Nombre del bucket S3 (sin prefijo ni sufijo)
+- `CLOUDFRONT_DISTRIBUTION_ID`: ID de la distribución de CloudFront
+- `CLOUDFRONT_DOMAIN`: Dominio de CloudFront para acceder a la aplicación
 
 ### Justificación de la Elección
 
 Se eligieron servicios AWS para el despliegue y CI/CD por las siguientes razones:
 
-1. **Escalabilidad**: S3 y CloudFront pueden manejar desde pequeños proyectos hasta aplicaciones de alto tráfico sin cambios de configuración.
+1. **Escalabilidad**: CloudFront permite distribuir el contenido globalmente con baja latencia.
+2. **Coste optimizado**: S3 proporciona almacenamiento económico para aplicaciones estáticas.
+3. **Seguridad**: IAM permite un control granular sobre los permisos.
+4. **Fiabilidad**: Alta disponibilidad y durabilidad del contenido.
+5. **SPA-friendly**: Configuración especial para manejar correctamente aplicaciones de una sola página.
+6. **Automatización**: Despliegue automático con pruebas integradas.
 
-2. **Rendimiento**: CloudFront como CDN proporciona baja latencia a nivel global, crucial para una experiencia de usuario óptima en e-commerce.
-
-3. **Seguridad**: Implementación automática de HTTPS a través de CloudFront y gestión de permisos granular con IAM.
-
-4. **Costo-eficiencia**: El modelo de pago por uso de S3 y CloudFront resulta económico para aplicaciones frontend estáticas.
-
-5. **Compatibilidad con SPA**: La configuración de CloudFront permite manejar correctamente el enrutamiento del lado del cliente necesario para React Router.
-
-6. **Automatización**: La integración con GitHub Actions permite un flujo completamente automatizado sin intervención manual.
-
-Esta infraestructura garantiza que los cambios en el código se reflejen rápidamente en producción, manteniendo un alto estándar de calidad gracias a las pruebas automatizadas previas al despliegue.
+Esta infraestructura garantiza un proceso de despliegue robusto, seguro y escalable para la aplicación, permitiendo una entrega continua de nuevas funcionalidades con mínima intervención manual.
 
 ## Testing de Componentes
 
@@ -454,15 +671,3 @@ vi.mock("sonner", () => ({
   },
 }));
 ```
-
-- Aísla el componente de sus dependencias externas
-- Permite simular respuestas específicas de acciones
-- Facilita la verificación de llamadas a servicios externos y librerías
-
-## Autor
-
-Desarrollado como prueba técnica integral para Senior Frontend por [@jotredev](https://www.github.com/jotredev)
-
-## Arquitectura de la aplicación
-
-[Arquitectura](https://github.com/jotredev/ecommerce-prueba-tecnica/blob/main/ARCHITECTURE.md)

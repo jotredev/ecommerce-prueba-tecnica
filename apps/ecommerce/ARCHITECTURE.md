@@ -16,18 +16,44 @@ La Tiendita sigue una arquitectura frontend moderna basada en componentes con ge
 
 ## Estructura del Proyecto
 
-### **`src/`**
+Este proyecto está organizado como un monorepo con pnpm workspaces, lo que permite gestionar múltiples paquetes relacionados desde un único repositorio.
 
-- **`actions/`** - Acciones para interactuar con APIs externas
-- **`assets/`** - Recursos estáticos y mocks de datos
-- **`components/`** - Componentes reutilizables
-  - **`/ui`** - Componentes de interfaz de usuario
-- **`helpers/`** - Funciones auxiliares (formateo, etc.)
-- **`layouts/`** - Layouts principales de la aplicación
-- **`lib/`** - Utilidades y configuraciones
-- **`pages/`** - Páginas principales de la aplicación
-- **`stores/`** - Stores de Zustand para el manejo del estado global
-- **`types/`** - Definiciones de tipos TypeScript
+```
+/ecommerce-prueba-tecnica/              # Raíz del monorepo
+  /apps/                       # Aplicaciones
+    /ecommerce/                # Aplicación principal de e-commerce
+      /src/                    # Código fuente
+        /actions/              # Acciones para interactuar con APIs externas
+        /assets/               # Recursos estáticos y mocks de datos
+        /components/           # Componentes específicos de la aplicación
+        /helpers/              # Funciones auxiliares
+        /layouts/              # Layouts principales
+        /lib/                  # Utilidades y configuraciones
+        /pages/                # Páginas de la aplicación
+        /stores/               # Stores de Zustand
+        /types/                # Definiciones de tipos
+
+  /packages/                   # Paquetes y bibliotecas compartidas
+    /ui-components/            # Biblioteca de componentes UI reutilizables
+      /src/                    # Código fuente de componentes
+        /button/               # Componente Button
+        /input/                # Componente Input
+        /label/                # Componente Label
+        /lib/                  # Utilidades específicas de componentes
+      /tsup.config.ts          # Configuración de compilación
+```
+
+### Descripción de la estructura
+
+- **apps/ecommerce**: Contiene la aplicación principal con toda la lógica de negocio, interfaces y estado.
+- **packages/ui-components**: Biblioteca de componentes UI reutilizables que se comparten entre aplicaciones, con una API consistente y estilos unificados basados en Tailwind CSS.
+
+La estructura de monorepo ofrece varias ventajas:
+
+1. **Código compartido**: Los componentes UI pueden reutilizarse en múltiples aplicaciones
+2. **Desarrollo independiente**: Los equipos pueden trabajar en diferentes paquetes sin interferir entre sí
+3. **Versionado coordinado**: Las dependencias entre paquetes están claramente definidas
+4. **Pruebas más eficientes**: Las pruebas pueden ejecutarse solo en los paquetes modificados
 
 ### Explicación de la Estructura
 
@@ -540,3 +566,289 @@ vi.mock("sonner", () => ({
 La arquitectura de La Tiendita se basa en principios modernos de desarrollo frontend, con énfasis en el flujo de datos unidireccional, componentes reutilizables y tipado fuerte. Los patrones implementados facilitan la mantenibilidad, escalabilidad y testabilidad del código.
 
 La combinación de React, TypeScript, Zustand y Tailwind CSS proporciona una base sólida para construir una aplicación robusta y extensible, mientras que la organización de carpetas y la separación de responsabilidades permiten un desarrollo eficiente y colaborativo.
+
+## Librería de Componentes UI
+
+Como parte de la arquitectura del proyecto, se ha desarrollado y publicado una librería de componentes React que proporciona los elementos de interfaz de usuario base para la aplicación.
+
+### Detalles de la librería
+
+- **Nombre**: `@jorgeetrejoo/react-ui-components`
+- **Repositorio**: Parte del monorepo en `/packages/ui-components`
+- **Publicación**: Disponible públicamente en [npm](https://www.npmjs.com/package/@jorgeetrejoo/react-ui-components)
+- **Versión actual**: 0.0.6
+
+### Arquitectura de la librería
+
+La librería sigue un diseño modular y utiliza las siguientes tecnologías:
+
+- **TypeScript**: Para proporcionar una experiencia de desarrollo con tipos seguros
+- **Tailwind CSS**: Para el diseño y estilos consistentes
+- **tsup**: Como bundler para generar builds optimizados en CommonJS y ESM
+- **clsx/tailwind-merge**: Para la gestión de clases CSS condicionales
+
+### Estructura interna
+
+Cada componente está organizado en su propio directorio con una estructura consistente:
+
+```
+/button/
+  index.tsx        # Implementación del componente
+  Button.stories.ts # Documentación Storybook (opcional)
+```
+
+### Patrón de desarrollo
+
+Los componentes siguen un patrón de desarrollo que prioriza:
+
+1. **Composición sobre herencia**: Componentes pequeños y componibles
+2. **Extensibilidad**: Facilidad para personalizar a través de props
+3. **Accesibilidad**: Siguiendo las mejores prácticas
+4. **Minimalismo**: Componentes ligeros con una única responsabilidad
+
+### Ejemplo de implementación
+
+El componente Button implementa la siguiente arquitectura:
+
+```tsx
+import { ComponentProps } from "react";
+import { cn } from "../lib/utils";
+
+/**
+ * Componente Button que proporciona un botón estilizado.
+ * Acepta todas las propiedades nativas de un botón HTML.
+ */
+export function Button({
+  className,
+  children,
+  ...props
+}: ComponentProps<"button">) {
+  return (
+    <button
+      data-slot="button"
+      className={cn(
+        "rounded-lg bg-primary px-4 py-2 text-white hover:bg-primary/90 active:bg-primary/100 disabled:pointer-events-none disabled:opacity-50",
+        className
+      )}
+      {...props}
+    >
+      {children}
+    </button>
+  );
+}
+```
+
+Este diseño permite:
+
+- Extensión a través de className
+- Compatibilidad con todas las propiedades nativas de botón
+- Estilo base consistente con Tailwind
+- Personalización mediante props
+
+## Estrategia de Despliegue y CI/CD
+
+La aplicación implementa una estrategia de integración continua y despliegue continuo (CI/CD) utilizando servicios de AWS, lo que permite actualizaciones automáticas cada vez que se realizan cambios en el repositorio de GitHub.
+
+### Infraestructura AWS Utilizada
+
+- **Amazon S3**: Almacenamiento de los archivos estáticos generados por Vite
+- **Amazon CloudFront**: CDN para distribución global con HTTPS
+- **AWS IAM**: Gestión de permisos para despliegue seguro
+- **GitHub Actions**: Automatización del pipeline de CI/CD
+
+### Flujo de CI/CD Implementado
+
+1. **Integración Continua**:
+
+   - Cada push a la rama principal activa automáticamente el pipeline
+   - Se ejecutan pruebas unitarias con Vitest
+   - Se realiza verificación de tipos con TypeScript
+   - Se ejecuta el linter para asegurar calidad de código
+
+2. **Construcción**:
+
+   - Instalación de dependencias con pnpm
+   - Construcción de la librería de componentes UI
+   - Construcción de la aplicación con `pnpm build`
+   - Generación de archivos estáticos optimizados para producción
+
+3. **Despliegue Continuo**:
+   - Sincronización automática de los archivos de la carpeta `dist` con el bucket S3
+   - Invalidación de la caché de CloudFront para asegurar contenido actualizado
+   - Notificación de estado del despliegue
+
+### Configuración de GitHub Actions
+
+El archivo `.github/workflows/aws-deploy.yml` define el pipeline completo:
+
+```yaml
+name: AWS CI/CD Deployment
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build packages UI components
+        run: pnpm --filter '@jorgeetrejoo/react-ui-components' build
+
+      - name: Run lint
+        run: cd apps/ecommerce && pnpm lint
+
+      - name: Run tests
+        run: cd apps/ecommerce && pnpm test
+
+  deploy:
+    name: Deploy
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Install dependencies
+        run: pnpm install
+
+      # Primero compilamos la librería de componentes
+      - name: Build UI components
+        run: pnpm --filter '@jorgeetrejoo/react-ui-components' build
+
+      # Luego compilamos la aplicación
+      - name: Build ecommerce application
+        run: cd apps/ecommerce && pnpm build
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Deploy to S3
+        run: |
+          aws s3 sync apps/ecommerce/dist/ s3://${{ secrets.AWS_S3_BUCKET }}/ --delete
+
+      - name: Invalidate CloudFront cache
+        run: |
+          aws cloudfront create-invalidation --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} --paths "/*"
+
+      - name: Deployment success notification
+        run: |
+          echo "✅ Despliegue correcto!"
+          echo "🌐 Website available at: https://${{ secrets.CLOUDFRONT_DOMAIN }}"
+```
+
+### Configuración de AWS
+
+#### 1. Política IAM para el usuario de despliegue
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:PutObject",
+        "s3:GetObject",
+        "s3:GetObjectVersion",
+        "s3:ListBucket",
+        "s3:DeleteObject",
+        "s3:PutObjectAcl"
+      ],
+      "Resource": [
+        "arn:aws:s3:::nombre-del-bucket",
+        "arn:aws:s3:::nombre-del-bucket/*"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "cloudfront:CreateInvalidation",
+        "cloudfront:GetInvalidation",
+        "cloudfront:ListInvalidations"
+      ],
+      "Resource": "arn:aws:cloudfront::123456789012:distribution/XXXXXXXXXXXXXXX"
+    }
+  ]
+}
+```
+
+#### 2. Política del bucket S3 para acceso público
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "PublicReadGetObject",
+      "Effect": "Allow",
+      "Principal": "*",
+      "Action": "s3:GetObject",
+      "Resource": "arn:aws:s3:::nombre-del-bucket/*"
+    }
+  ]
+}
+```
+
+#### 3. Configuración de CloudFront para aplicaciones SPA
+
+Para el correcto funcionamiento de la aplicación SPA, se configuraron páginas de error personalizadas en CloudFront:
+
+- **Default Root Object**: `index.html`
+- **Error Pages**:
+  - Código 403: Redirigir a `/index.html` con código 200
+  - Código 404: Redirigir a `/index.html` con código 200
+
+Esta configuración permite que el enrutamiento del lado del cliente funcione correctamente al acceder directamente a rutas específicas.
+
+### Seguridad y Secretos
+
+Para proteger las credenciales y configuraciones sensibles:
+
+- Las credenciales de AWS se almacenan como secretos en GitHub Actions
+- Se implementa el principio de mínimo privilegio en las políticas IAM
+- Se utiliza HTTPS para todas las comunicaciones mediante CloudFront
+
+### Ventajas de la arquitectura de despliegue
+
+1. **Escalabilidad**: CloudFront permite distribuir el contenido globalmente con baja latencia
+2. **Coste optimizado**: S3 proporciona almacenamiento económico para aplicaciones estáticas
+3. **Seguridad**: IAM permite un control granular sobre los permisos
+4. **Fiabilidad**: Alta disponibilidad y durabilidad del contenido
+5. **Automatización**: Despliegue automático con pruebas integradas
